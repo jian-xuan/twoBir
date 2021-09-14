@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gb.dao.AnimationMapper">
+  <resultMap id="BaseResultMap" type="com.gb.bean.Animation">
+    <id column="ani_id" jdbcType="INTEGER" property="aniId" />
+    <result column="ani_name" jdbcType="VARCHAR" property="aniName" />
+    <result column="ani_dest" jdbcType="VARCHAR" property="aniDest" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ani_id, ani_name, ani_dest
+  </sql>
+  <select id="selectByExample" parameterType="com.gb.bean.AnimationExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from animation
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from animation
+    where ani_id = #{aniId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from animation
+    where ani_id = #{aniId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.gb.bean.AnimationExample">
+    delete from animation
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.gb.bean.Animation">
+    insert into animation (ani_id, ani_name, ani_dest
+      )
+    values (#{aniId,jdbcType=INTEGER}, #{aniName,jdbcType=VARCHAR}, #{aniDest,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.gb.bean.Animation">
+    insert into animation
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="aniId != null">
+        ani_id,
+      </if>
+      <if test="aniName != null">
+        ani_name,
+      </if>
+      <if test="aniDest != null">
+        ani_dest,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="aniId != null">
+        #{aniId,jdbcType=INTEGER},
+      </if>
+      <if test="aniName != null">
+        #{aniName,jdbcType=VARCHAR},
+      </if>
+      <if test="aniDest != null">
+        #{aniDest,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.gb.bean.AnimationExample" resultType="java.lang.Long">
+    select count(*) from animation
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update animation
+    <set>
+      <if test="record.aniId != null">
+        ani_id = #{record.aniId,jdbcType=INTEGER},
+      </if>
+      <if test="record.aniName != null">
+        ani_name = #{record.aniName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.aniDest != null">
+        ani_dest = #{record.aniDest,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update animation
+    set ani_id = #{record.aniId,jdbcType=INTEGER},
+      ani_name = #{record.aniName,jdbcType=VARCHAR},
+      ani_dest = #{record.aniDest,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gb.bean.Animation">
+    update animation
+    <set>
+      <if test="aniName != null">
+        ani_name = #{aniName,jdbcType=VARCHAR},
+      </if>
+      <if test="aniDest != null">
+        ani_dest = #{aniDest,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ani_id = #{aniId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gb.bean.Animation">
+    update animation
+    set ani_name = #{aniName,jdbcType=VARCHAR},
+      ani_dest = #{aniDest,jdbcType=VARCHAR}
+    where ani_id = #{aniId,jdbcType=INTEGER}
+  </update>
+</mapper>

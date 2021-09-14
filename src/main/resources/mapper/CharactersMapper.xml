@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gb.dao.CharactersMapper">
+  <resultMap id="BaseResultMap" type="com.gb.bean.Characters">
+    <id column="ch_id" jdbcType="INTEGER" property="chId" />
+    <result column="ch_name" jdbcType="VARCHAR" property="chName" />
+    <result column="ch_birthday" jdbcType="TIMESTAMP" property="chBirthday" />
+    <result column="ch_back" jdbcType="VARCHAR" property="chBack" />
+    <result column="ch_ani" jdbcType="VARCHAR" property="chAni" />
+    <result column="ch_img" jdbcType="VARCHAR" property="chImg" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ch_id, ch_name, ch_birthday, ch_back, ch_ani, ch_img
+  </sql>
+  <select id="selectByExample" parameterType="com.gb.bean.CharactersExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tab_ch
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tab_ch
+    where ch_id = #{chId,jdbcType=INTEGER}
+  </select>
+
+<!--增加模糊查询生日的逻辑-->
+  <select id="selectByToday" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tab_ch
+    where ch_birthday like % #{chBirthday,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tab_ch
+    where ch_id = #{chId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.gb.bean.CharactersExample">
+    delete from tab_ch
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.gb.bean.Characters">
+    insert into tab_ch (ch_id, ch_name, ch_birthday, 
+      ch_back, ch_ani, ch_img
+      )
+    values (#{chId,jdbcType=INTEGER}, #{chName,jdbcType=VARCHAR}, #{chBirthday,jdbcType=TIMESTAMP}, 
+      #{chBack,jdbcType=VARCHAR}, #{chAni,jdbcType=VARCHAR}, #{chImg,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.gb.bean.Characters">
+    insert into tab_ch
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="chId != null">
+        ch_id,
+      </if>
+      <if test="chName != null">
+        ch_name,
+      </if>
+      <if test="chBirthday != null">
+        ch_birthday,
+      </if>
+      <if test="chBack != null">
+        ch_back,
+      </if>
+      <if test="chAni != null">
+        ch_ani,
+      </if>
+      <if test="chImg != null">
+        ch_img,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="chId != null">
+        #{chId,jdbcType=INTEGER},
+      </if>
+      <if test="chName != null">
+        #{chName,jdbcType=VARCHAR},
+      </if>
+      <if test="chBirthday != null">
+        #{chBirthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="chBack != null">
+        #{chBack,jdbcType=VARCHAR},
+      </if>
+      <if test="chAni != null">
+        #{chAni,jdbcType=VARCHAR},
+      </if>
+      <if test="chImg != null">
+        #{chImg,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.gb.bean.CharactersExample" resultType="java.lang.Long">
+    select count(*) from tab_ch
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tab_ch
+    <set>
+      <if test="record.chId != null">
+        ch_id = #{record.chId,jdbcType=INTEGER},
+      </if>
+      <if test="record.chName != null">
+        ch_name = #{record.chName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.chBirthday != null">
+        ch_birthday = #{record.chBirthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.chBack != null">
+        ch_back = #{record.chBack,jdbcType=VARCHAR},
+      </if>
+      <if test="record.chAni != null">
+        ch_ani = #{record.chAni,jdbcType=VARCHAR},
+      </if>
+      <if test="record.chImg != null">
+        ch_img = #{record.chImg,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tab_ch
+    set ch_id = #{record.chId,jdbcType=INTEGER},
+      ch_name = #{record.chName,jdbcType=VARCHAR},
+      ch_birthday = #{record.chBirthday,jdbcType=TIMESTAMP},
+      ch_back = #{record.chBack,jdbcType=VARCHAR},
+      ch_ani = #{record.chAni,jdbcType=VARCHAR},
+      ch_img = #{record.chImg,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gb.bean.Characters">
+    update tab_ch
+    <set>
+      <if test="chName != null">
+        ch_name = #{chName,jdbcType=VARCHAR},
+      </if>
+      <if test="chBirthday != null">
+        ch_birthday = #{chBirthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="chBack != null">
+        ch_back = #{chBack,jdbcType=VARCHAR},
+      </if>
+      <if test="chAni != null">
+        ch_ani = #{chAni,jdbcType=VARCHAR},
+      </if>
+      <if test="chImg != null">
+        ch_img = #{chImg,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ch_id = #{chId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gb.bean.Characters">
+    update tab_ch
+    set ch_name = #{chName,jdbcType=VARCHAR},
+      ch_birthday = #{chBirthday,jdbcType=TIMESTAMP},
+      ch_back = #{chBack,jdbcType=VARCHAR},
+      ch_ani = #{chAni,jdbcType=VARCHAR},
+      ch_img = #{chImg,jdbcType=VARCHAR}
+    where ch_id = #{chId,jdbcType=INTEGER}
+  </update>
+</mapper>
